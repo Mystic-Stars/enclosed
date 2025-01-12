@@ -9,7 +9,7 @@ FROM base AS builder
 WORKDIR /app
 RUN apk add --no-cache libc6-compat python3 make g++
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --no-frozen-lockfile
 RUN pnpm run -r build
 
 FROM base AS runner
