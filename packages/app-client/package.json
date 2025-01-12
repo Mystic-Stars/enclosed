@@ -16,12 +16,12 @@
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "@openscratch/note-client": "file:"
-  },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
     "@types/node": "^20.17.12",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@openscratch/note-client": "file:"
   }
 }
