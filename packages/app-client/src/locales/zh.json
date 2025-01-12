@@ -1,0 +1,32 @@
+{
+  "app": {
+    "title": "OpenScratch Note",
+    "description": "简单安全的笔记分享"
+  },
+  "insecureContextWarning": {
+    "description": "您的连接不安全，应用程序必须通过HTTPS提供服务才能正常工作。您将无法创建或查看笔记。",
+    "learn-more": "了解更多"
+  },
+  "navbar": {
+    "new-note": "新建笔记",
+    "github": "GitHub",
+    "language": "语言",
+    "github-repository": "GitHub仓库",
+    "documentation": "文档",
+    "change-theme": "更改主题",
+    "menu-icon": "菜单图标",
+    "change-language": "更改语言",
+    "theme": {
+      "title": "主题",
+      "light-mode": "浅色模式",
+      "dark-mode": "深色模式",
+      "system-mode": "跟随系统"
+    },
+    "login": "登录",
+    "logout": "退出登录"
+  },
+  "footer": {
+    "built-by": "由",
+    "version": "版本"
+  }
+} 

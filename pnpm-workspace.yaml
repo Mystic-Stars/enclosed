@@ -1,5 +1,8 @@
 packages:
   - 'packages/*'
+  - '!packages/deploy-cloudflare'
+
+name: '@openscratch/note-workspace'
 
 catalog:
   "@antfu/eslint-config": ^3.6.2

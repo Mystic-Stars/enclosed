@@ -70,95 +70,65 @@ const LanguageSwitcher: Component = () => {
 };
 
 export const Navbar: Component = () => {
-  const themeStore = useThemeStore();
-  const { triggerResetNoteForm } = useNoteContext();
-  const navigate = useNavigate();
   const { t } = useI18n();
-
+  const navigate = useNavigate();
   const config = getConfig();
+  const { isNoteView } = useNoteContext();
 
   const newNoteClicked = () => {
-    triggerResetNoteForm();
     navigate('/');
   };
 
-  // Only show the "New Note" button if the user is authenticated or if authentication is not required
   const getShouldShowNewNoteButton = () => config.isAuthenticationRequired ? authStore.getIsAuthenticated() : true;
 
   return (
-    <div class="border-b border-border bg-surface">
-      <div class="flex items-center justify-between px-6 py-3 mx-auto max-w-1200px">
-        <div class="flex items-baseline gap-4">
-          <Button variant="link" class="text-lg font-semibold border-b border-transparent hover:(no-underline !border-border) h-auto py-0 px-1 ml--1 rounded-none !transition-border-color-250" onClick={newNoteClicked}>
-            {t('app.title')}
-          </Button>
-
-          <span class="text-muted-foreground hidden sm:block">
-            {t('app.description')}
-          </span>
+    <nav class="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div class="container flex h-14 items-center">
+        <div class="mr-4 hidden md:flex">
+          <A class="mr-6 flex items-center space-x-2" href="/">
+            <span class="hidden font-bold sm:inline-block">OpenScratch Note</span>
+          </A>
         </div>
 
-        <div class="flex gap-2 items-center">
-
-          {getShouldShowNewNoteButton() && (
-            <Button variant="secondary" onClick={newNoteClicked}>
-              <div class="i-tabler-plus mr-1 text-muted-foreground"></div>
-              {t('navbar.new-note')}
-            </Button>
-          )}
-
-          <Button variant="ghost" class="text-lg px-0 size-9 hidden md:inline-flex" as={A} href="https://github.com/CorentinTh/enclosed" target="_blank" rel="noopener noreferrer" aria-label={t('navbar.github-repository')}>
-            <div class="i-tabler-brand-github"></div>
-          </Button>
+        <div class="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          <div class="w-full flex-1 md:w-auto md:flex-none">
+            <Show when={!isNoteView() && getShouldShowNewNoteButton()}>
+              <Button onClick={newNoteClicked} class="w-full md:w-auto">
+                {t('navbar.new-note')}
+              </Button>
+            </Show>
+          </div>
 
           <DropdownMenu>
-            <DropdownMenuTrigger as={Button} class="text-lg px-0 size-9 hidden md:inline-flex" variant="ghost" aria-label={t('navbar.change-theme')}>
-              <div classList={{ 'i-tabler-moon': themeStore.getColorMode() === 'dark', 'i-tabler-sun': themeStore.getColorMode() === 'light' }}></div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent class="w-42">
-              <ThemeSwitcher />
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger as={Button} class="text-lg px-0 size-9 hidden md:inline-flex" variant="ghost" aria-label={t('navbar.language')}>
-              <div class="i-custom-language size-4"></div>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <LanguageSwitcher />
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-
-            <DropdownMenuTrigger as={Button} class="text-lg px-0 size-9" variant="ghost" aria-label={t('navbar.menu-icon')}>
-              <div class="i-tabler-dots-vertical hidden md:block"></div>
-              <div class="i-tabler-menu-2 block md:hidden"></div>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" class="w-9 px-0">
+                <div class="i-tabler-menu-2 h-6 w-6" />
+                <span class="sr-only">Toggle menu</span>
+              </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent class="w-46">
-
-              {/* Mobile only items */}
-              <DropdownMenuItem as="a" class="flex items-center gap-2 cursor-pointer md:hidden" target="_blank" href="https://github.com/CorentinTh/enclosed" rel="noopener noreferrer">
-                <div class="i-tabler-brand-github text-lg"></div>
-                {t('navbar.github')}
-              </DropdownMenuItem>
+            <DropdownMenuContent align="end">
+              <Show when={config.isAuthenticationRequired}>
+                <Show
+                  when={authStore.getIsAuthenticated()}
+                  fallback={
+                    <DropdownMenuItem asChild>
+                      <A href="/login" class="cursor-pointer">
+                        {t('navbar.login')}
+                      </A>
+                    </DropdownMenuItem>
+                  }
+                >
+                  <DropdownMenuItem onClick={() => authStore.logout()} class="cursor-pointer">
+                    {t('navbar.logout')}
+                  </DropdownMenuItem>
+                </Show>
+                <DropdownMenuSeparator />
+              </Show>
 
               <DropdownMenuSub>
-                <DropdownMenuSubTrigger as="a" class="flex items-center gap-2 md:hidden" aria-label={t('navbar.change-theme')}>
-                  <div class="text-lg" classList={{ 'i-tabler-moon': themeStore.getColorMode() === 'dark', 'i-tabler-sun': themeStore.getColorMode() === 'light' }}></div>
-                  {t('navbar.theme.theme')}
-                </DropdownMenuSubTrigger>
-
-                <DropdownMenuSubContent>
-                  <ThemeSwitcher />
-                </DropdownMenuSubContent>
-
-              </DropdownMenuSub>
-
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger as="a" class="flex items-center text-medium gap-2 md:hidden" aria-label={t('navbar.change-language')}>
-                  <div class="i-custom-language size-4"></div>
+                <DropdownMenuSubTrigger class="flex items-center gap-2">
+                  <div class="i-tabler-language text-lg" />
                   {t('navbar.language')}
                 </DropdownMenuSubTrigger>
                 <DropdownMenuSubContent>
@@ -166,74 +136,55 @@ export const Navbar: Component = () => {
                 </DropdownMenuSubContent>
               </DropdownMenuSub>
 
-              {/* Default items */}
-              <DropdownMenuItem as="a" class="flex items-center gap-2 cursor-pointer" target="_blank" href={buildDocUrl({ path: '/' })}>
-                <div class="i-tabler-file-text text-lg"></div>
-                {t('navbar.settings.documentation')}
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger class="flex items-center gap-2">
+                  <div class="i-tabler-palette text-lg" />
+                  {t('navbar.theme.title')}
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  <ThemeSwitcher />
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem asChild>
+                <A href={buildDocUrl()} target="_blank" class="flex items-center gap-2 cursor-pointer">
+                  <div class="i-tabler-book text-lg" />
+                  {t('navbar.documentation')}
+                </A>
               </DropdownMenuItem>
 
-              <DropdownMenuItem as="a" class="flex items-center gap-2 cursor-pointer" target="_blank" href={buildDocUrl({ path: '/integrations/cli' })}>
-                <div class="i-tabler-terminal text-lg"></div>
-                {t('navbar.settings.cli')}
+              <DropdownMenuItem asChild>
+                <A href="https://github.com/your-username/openscratch-note" target="_blank" class="flex items-center gap-2 cursor-pointer">
+                  <div class="i-tabler-brand-github text-lg" />
+                  GitHub
+                </A>
               </DropdownMenuItem>
-
-              <DropdownMenuItem as="a" class="flex items-center gap-2 cursor-pointer" target="_blank" href="https://github.com/CorentinTh/enclosed/issues/new/choose" rel="noopener noreferrer">
-                <div class="i-tabler-bug text-lg"></div>
-                {t('navbar.settings.report-bug')}
-              </DropdownMenuItem>
-
-              <DropdownMenuItem as="a" class="flex items-center gap-2 cursor-pointer" target="_blank" href="https://buymeacoffee.com/cthmsst" rel="noopener noreferrer">
-                <div class="i-tabler-pig-money text-lg"></div>
-                {t('navbar.settings.support')}
-              </DropdownMenuItem>
-
-              {config.isAuthenticationRequired && authStore.getIsAuthenticated() && (
-                <>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem class="flex items-center gap-2 cursor-pointer" onClick={() => authStore.logout()}>
-                    <div class="i-tabler-logout text-lg"></div>
-                    {t('navbar.settings.logout')}
-                  </DropdownMenuItem>
-                </>
-              )}
-
             </DropdownMenuContent>
-
           </DropdownMenu>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
 export const Footer: Component = () => {
+  const config = getConfig();
   const { t } = useI18n();
 
   return (
-    <div class="bg-surface border-t border-border py-6 px-6 text-center text-muted-foreground flex flex-col sm:flex-row items-center justify-center gap-1">
-      <div>
-        {t('footer.crafted-by')}
-        {' '}
-        <Button variant="link" as="a" href="https://corentin.tech" target="_blank" class="p-0 text-muted-foreground underline hover:text-primary transition font-normal h-auto">Corentin Thomasset</Button>
-        .
+    <footer class="py-6 md:px-8 md:py-0">
+      <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+        <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
+          {t('footer.built-by')}{' '}
+          <a href="https://github.com/your-username/openscratch-note" target="_blank" class="font-medium underline underline-offset-4">
+            OpenScratch Team
+          </a>
+          . v{config.appVersion}
+        </p>
       </div>
-      <div>
-        {t('footer.source-code')}
-        {' '}
-        <Button variant="link" as="a" href="https://github.com/CorentinTh/enclosed" target="_blank" class="p-0 text-muted-foreground underline hover:text-primary transition font-normal h-auto">{t('footer.github')}</Button>
-        .
-      </div>
-
-      <div>
-        {t('footer.version')}
-        {' '}
-        <Button variant="link" as="a" href={`https://github.com/CorentinTh/enclosed/tree/v${buildTimeConfig.enclosedVersion}`} target="_blank" class="p-0 text-muted-foreground underline hover:text-primary transition font-normal h-auto">
-          v
-          {buildTimeConfig.enclosedVersion}
-        </Button>
-
-      </div>
-    </div>
+    </footer>
   );
 };
 

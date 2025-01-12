@@ -1,11 +1,17 @@
+version: '3.8'
+
 services:
-  enclosed:
-    image: corentinth/enclosed
-    ports:
-      - 8787:8787
-    volumes:
-      - enclosed-data:/app/.data
+  openscratch-note:
+    build: .
+    container_name: openscratch-note
     restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=8787
 
 volumes:
   enclosed-data:

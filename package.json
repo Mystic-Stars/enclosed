@@ -1,21 +1,21 @@
 {
-  "name": "@enclosed/root",
-  "version": "1.14.0",
-  "description": "Send private and secure note",
+  "name": "@openscratch/note",
+  "version": "1.0.0",
+  "description": "OpenScratch Note - A secure and private note sharing application",
   "packageManager": "pnpm@9.15.0",
   "license": "Apache-2.0",
-  "author": "Corentin Thomasset <corentinth@proton.me> (https://corentin.tech)",
+  "author": "OpenScratch Team",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CorentinTh/enclosed"
+    "url": "https://github.com/your-username/openscratch-note"
   },
   "engines": {
     "node": ">=22.0.0"
   },
   "scripts": {
     "release": "bumpp --commit --tag --push --recursive",
-    "docker:build": "docker build -t enclosed .",
-    "docker:run": "docker run -d -p 8788:8787 enclosed"
+    "docker:build": "docker build -t openscratch-note .",
+    "docker:run": "docker run -d -p 8788:8787 openscratch-note"
   },
   "keywords": [
     "note",
@@ -25,9 +25,13 @@
     "encryption",
     "password",
     "manager",
-    "expiration"
+    "expiration",
+    "openscratch"
   ],
   "devDependencies": {
     "bumpp": "^9.5.2"
+  },
+  "dependencies": {
+    "@openscratch/note": "file:"
   }
 }
